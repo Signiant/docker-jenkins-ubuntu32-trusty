@@ -11,6 +11,13 @@ RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/America/New_York /etc/loca
 COPY locale /etc/default/locale
 RUN chmod a+r /etc/default/locale
 
+# Add google nameservers (otherwise update won't work)
+RUN echo "nameserver 8.8.8.8" >> /etc/network/interfaces
+RUN echo "nameserver 8.8.4.4" >> /etc/network/interfaces
+
+# Restart network daemon
+RUN /etc/init.d/networking restart
+
 # Update everything installed
 RUN apt-get -y update
 RUN apt-get -y upgrade
