@@ -12,8 +12,8 @@ COPY locale /etc/default/locale
 RUN chmod a+r /etc/default/locale
 
 # Add google nameservers (otherwise update won't work)
-RUN echo "nameserver 8.8.8.8" >> /etc/network/interfaces
-RUN echo "nameserver 8.8.4.4" >> /etc/network/interfaces
+RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+RUN echo "nameserver 8.8.4.4" >> /etc/resolv.conf
 
 # Restart network daemon
 RUN /etc/init.d/networking restart
