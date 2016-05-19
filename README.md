@@ -1,2 +1,2 @@
-# docker-jenkins-debian32-wheezy
-Jenkins build node using debian32 wheezy
+# docker-jenkins-ubuntu32-trusty
+Jenkins build node using ubuntu32 trusty
