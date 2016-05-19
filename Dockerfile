@@ -11,14 +11,15 @@ RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/America/New_York /etc/loca
 COPY locale /etc/default/locale
 RUN chmod a+r /etc/default/locale
 
-RUN ping -c 5 google.ca
-
 # Add google nameservers (otherwise update won't work)
 RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 RUN echo "nameserver 8.8.4.4" >> /etc/resolv.conf
 
 # Restart network daemon
 RUN /etc/init.d/networking restart
+
+# Restart docker daemon (resets iptables changes)
+RUN service docker restart
 
 # Update everything installed
 RUN apt-get -y update
