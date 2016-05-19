@@ -15,11 +15,11 @@ RUN chmod a+r /etc/default/locale
 RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 RUN echo "nameserver 8.8.4.4" >> /etc/resolv.conf
 
+# Disable firewall
+RUN ufw disable
+
 # Restart network daemon
 RUN /etc/init.d/networking restart
-
-# Restart docker daemon (resets iptables changes)
-RUN service docker restart
 
 # Update everything installed
 RUN apt-get -y update
