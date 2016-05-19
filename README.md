@@ -1,0 +1,1 @@
+# docker-jenkins-ubuntu32-trusty
