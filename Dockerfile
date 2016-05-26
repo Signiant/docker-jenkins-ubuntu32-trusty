@@ -11,16 +11,6 @@ RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/America/New_York /etc/loca
 COPY locale /etc/default/locale
 RUN chmod a+r /etc/default/locale
 
-# Add google nameservers (otherwise update won't work)
-RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf
-RUN echo "nameserver 8.8.4.4" >> /etc/resolv.conf
-
-# Disable firewall
-RUN iptables -F
-
-# Restart network daemon
-RUN /etc/init.d/networking restart
-
 # Update everything installed
 RUN apt-get -y update
 RUN apt-get -y upgrade
@@ -67,10 +57,10 @@ RUN echo "Defaults:$BUILD_USER !requiretty" >> /etc/sudoers
 RUN echo "$BUILD_USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Install Java
-RUN apt-get -y install openjdk-7-jdk
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install openjdk-7-jdk; exit 0
 
 # Install ant
-ENV ANT_VERSION 1.9.5
+ENV ANT_VERSION 1.9.7
 RUN cd && \
     wget -q http://www.us.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz && \
     tar -xzf apache-ant-${ANT_VERSION}-bin.tar.gz && \
