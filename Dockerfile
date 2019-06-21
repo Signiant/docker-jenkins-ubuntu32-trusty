@@ -12,6 +12,7 @@ COPY locale /etc/default/locale
 RUN chmod a+r /etc/default/locale
 
 # Update everything installed
+RUN add-apt-repository ppa:openjdk-r/ppa
 RUN apt-get -y update
 RUN apt-get -y upgrade
 
