@@ -1,5 +1,5 @@
-FROM 32bit/ubuntu:14.04
-MAINTAINER devops@signiant.com
+FROM i386/ubuntu:14.04
+MAINTAINER sre@signiant.com
 
 ENV BUILD_USER bldmgr
 ENV BUILD_USER_GROUP users
@@ -57,7 +57,7 @@ RUN echo "Defaults:$BUILD_USER !requiretty" >> /etc/sudoers
 RUN echo "$BUILD_USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Install Java
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install openjdk-7-jdk; exit 0
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install openjdk-8-jdk; exit 0
 
 # Install ant
 ENV ANT_VERSION 1.9.7
