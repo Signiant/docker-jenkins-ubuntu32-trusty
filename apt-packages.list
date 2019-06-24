@@ -10,3 +10,4 @@ g++
 wget
 python
 sudo
+openjdk-8-jdk

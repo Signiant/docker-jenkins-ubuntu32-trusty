@@ -12,7 +12,9 @@ COPY locale /etc/default/locale
 RUN chmod a+r /etc/default/locale
 
 # Update everything installed
-
+RUN apt-get -y update
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:openjdk-r/ppa
 RUN apt-get -y update
 RUN apt-get -y upgrade
 
@@ -20,6 +22,9 @@ RUN apt-get -y upgrade
 COPY apt-packages.list /tmp/apt-packages.list
 RUN chmod +r /tmp/apt-packages.list
 RUN apt-get install -y `cat /tmp/apt-packages.list`
+
+# Install Java
+RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 # Install PIP - useful everywhere
 
@@ -57,12 +62,7 @@ RUN echo "Defaults:$BUILD_USER !requiretty" >> /etc/sudoers
 # Add user to sudoers with NOPASSWD
 RUN echo "$BUILD_USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Install Java
 
-RUN apt-get install -y software-properties-common
-RUN add-apt-repository ppa:openjdk-r/ppa
-RUN apt-get -y update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install openjdk-8-jdk; exit 0
 
 # Install ant
 ENV ANT_VERSION 1.9.7
