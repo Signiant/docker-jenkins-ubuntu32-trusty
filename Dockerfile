@@ -12,7 +12,7 @@ COPY locale /etc/default/locale
 RUN chmod a+r /etc/default/locale
 
 # Update everything installed
-RUN add-apt-repository ppa:openjdk-r/ppa
+
 RUN apt-get -y update
 RUN apt-get -y upgrade
 
@@ -58,12 +58,16 @@ RUN echo "Defaults:$BUILD_USER !requiretty" >> /etc/sudoers
 RUN echo "$BUILD_USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Install Java
+
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:openjdk-r/ppa
+RUN apt-get -y update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install openjdk-8-jdk; exit 0
 
 # Install ant
 ENV ANT_VERSION 1.9.7
 RUN cd && \
-    wget -q http://www.us.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz && \
+    wget -q https://archive.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz && \
     tar -xzf apache-ant-${ANT_VERSION}-bin.tar.gz && \
     mv apache-ant-${ANT_VERSION} /usr/local/apache-ant-${ANT_VERSION} && \
     rm apache-ant-${ANT_VERSION}-bin.tar.gz
