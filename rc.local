@@ -1,0 +1,5 @@
+# Create the PrivSep empty dir if necessary
+if [ ! -d /var/run/sshd ]; then
+   mkdir /var/run/sshd
+   chmod 0755 /var/run/sshd
+fi

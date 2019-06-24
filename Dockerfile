@@ -90,6 +90,9 @@ RUN mkdir -p /home/$BUILD_USER/.ssh
 RUN chown -R $BUILD_USER:$BUILD_USER_GROUP /home/$BUILD_USER
 RUN chmod 700 /home/$BUILD_USER/.ssh
 
+#workaround for no /run/sshd directory
+ADD rc.local /etc/
+
 # Add in our build specific paths
 RUN mkdir -p /opt/corp/local/ant/bin
 RUN ln -s /usr/bin/ant /opt/corp/local/ant/bin/ant
