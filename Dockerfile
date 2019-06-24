@@ -1,9 +1,6 @@
 FROM i386/ubuntu:14.04
 MAINTAINER sre@signiant.com
 
-ENV BUILD_USER bldmgr
-ENV BUILD_USER_GROUP users
-
 # Set the timezone
 RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
 
@@ -62,8 +59,6 @@ RUN echo "Defaults:$BUILD_USER !requiretty" >> /etc/sudoers
 # Add user to sudoers with NOPASSWD
 RUN echo "$BUILD_USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-
-
 # Install ant
 ENV ANT_VERSION 1.9.7
 RUN cd && \
@@ -90,8 +85,8 @@ RUN mkdir -p /home/$BUILD_USER/.ssh
 RUN chown -R $BUILD_USER:$BUILD_USER_GROUP /home/$BUILD_USER
 RUN chmod 700 /home/$BUILD_USER/.ssh
 
-#workaround for no /run/sshd directory
-ADD rc.local /etc/
+#workaround for no /var/run/sshd directory
+RUN mkdir /var/run/sshd
 
 # Add in our build specific paths
 RUN mkdir -p /opt/corp/local/ant/bin
