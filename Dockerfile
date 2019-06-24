@@ -1,8 +1,5 @@
-FROM 32bit/ubuntu:14.04
-MAINTAINER devops@signiant.com
-
-ENV BUILD_USER bldmgr
-ENV BUILD_USER_GROUP users
+FROM i386/ubuntu:14.04
+MAINTAINER sre@signiant.com
 
 # Set the timezone
 RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
@@ -13,12 +10,18 @@ RUN chmod a+r /etc/default/locale
 
 # Update everything installed
 RUN apt-get -y update
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:openjdk-r/ppa
+RUN apt-get -y update
 RUN apt-get -y upgrade
 
 # Install a base set of packages from the default repo
 COPY apt-packages.list /tmp/apt-packages.list
 RUN chmod +r /tmp/apt-packages.list
 RUN apt-get install -y `cat /tmp/apt-packages.list`
+
+# Install Java
+RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 # Install PIP - useful everywhere
 
@@ -56,13 +59,10 @@ RUN echo "Defaults:$BUILD_USER !requiretty" >> /etc/sudoers
 # Add user to sudoers with NOPASSWD
 RUN echo "$BUILD_USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Install Java
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install openjdk-7-jdk; exit 0
-
 # Install ant
 ENV ANT_VERSION 1.9.7
 RUN cd && \
-    wget -q http://www.us.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz && \
+    wget -q https://archive.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz && \
     tar -xzf apache-ant-${ANT_VERSION}-bin.tar.gz && \
     mv apache-ant-${ANT_VERSION} /usr/local/apache-ant-${ANT_VERSION} && \
     rm apache-ant-${ANT_VERSION}-bin.tar.gz
@@ -84,6 +84,9 @@ RUN sed -ri 's/#PermitEmptyPasswords no/PermitEmptyPasswords yes/g' /etc/ssh/ssh
 RUN mkdir -p /home/$BUILD_USER/.ssh
 RUN chown -R $BUILD_USER:$BUILD_USER_GROUP /home/$BUILD_USER
 RUN chmod 700 /home/$BUILD_USER/.ssh
+
+#workaround for no /var/run/sshd directory
+RUN mkdir /var/run/sshd
 
 # Add in our build specific paths
 RUN mkdir -p /opt/corp/local/ant/bin
