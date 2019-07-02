@@ -1,4 +1,4 @@
-FROM i386/ubuntu:14.04
+FROM ansible/ubuntu14.04-ansible
 MAINTAINER sre@signiant.com
 
 # Set the timezone
